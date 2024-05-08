@@ -51,7 +51,7 @@ export async function sendMessage(req: Request, res: Response) {
     chat.messages.push(newMessage.id);
     await newMessage.save();
     await chat.save();
-    return res.json({ ...newMessage.toJSON(), sender: req.user });
+    return res.json({ ...newMessage.toJSON(), sender: {...req.user, _id: req.user.id} });
   } catch (error) {
     return errorHandler(res, error);
   }
