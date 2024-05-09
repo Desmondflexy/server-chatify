@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import { errorHandler } from "../utils/helpers";
 import { Chat, Message } from "./models";
 
@@ -10,15 +10,6 @@ export async function startChat(req: Request, res: Response) {
     const userId = req.user.id;
     const { text } = req.body;
     if (!text) return res.status(400).json("text is required");
-    // check if chat already exists
-    const chat = await Chat.findOne({
-      members: { $all: [userId, friendId] }
-    });
-    if (chat) {
-      return res.status(409).json({
-        message: "chat already exists", chatId: chat.id
-      });
-    }
 
     const newMessage = new Message({ text, sender: userId });
     const newChat = new Chat({
@@ -33,6 +24,26 @@ export async function startChat(req: Request, res: Response) {
     });
   } catch (error) {
     return errorHandler(res, error);
+  }
+}
+
+// check if chat with friend already exist
+export async function checkIfChatExists(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { friendId } = req.params;
+    const userId = req.user.id;
+    // check if chat already exists
+    const chat = await Chat.findOne({
+      members: { $all: [userId, friendId] }
+    });
+    if (chat) {
+      return res.status(409).json({
+        message: "chat already exists", chatId: chat.id
+      });
+    }
+    next();
+  } catch (error) {
+    errorHandler(res, error);
   }
 }
 
