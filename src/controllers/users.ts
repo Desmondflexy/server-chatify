@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { errorHandler } from '../utils/helpers';
-import { User } from './models';
+import User from '../models/user';
 
 export function me(req: Request, res: Response) {
   try {

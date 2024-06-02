@@ -1,4 +1,4 @@
-import { IUser } from "../controllers/models";
+import { IUser } from "../types";
 import jwt from "jsonwebtoken";
 import { Response, Request } from "express";
 import dotenv from "dotenv";
@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 /**Token expiration in seconds */
-// const expiresIn = Number(process.env.JWT_EXPIRES_IN) * 3600;
-const expiresIn = 60 * 60;
+const expiresIn = Number(process.env.JWT_EXPIRES_IN) * 3600;
+// const expiresIn = 60 * 60;
 
 const secretKey = process.env.JWT_SECRET as string;
 
