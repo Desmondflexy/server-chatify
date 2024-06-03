@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { devLog } from "../utils/helpers";
 
 export default async function connectDB() {
     let databaseUrl = "mongodb://localhost:27017/chatify";
@@ -6,9 +7,9 @@ export default async function connectDB() {
         databaseUrl = process.env.DATABASE_URL as string;
     }
     try {
-        console.log("Connecting to database...");
+        devLog("Connecting to database...");
         await mongoose.connect(databaseUrl);
-        console.log("Database connection successful");
+        devLog("Database connection successful");
     } catch (error) {
         console.error(error);
     }

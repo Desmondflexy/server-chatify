@@ -1,10 +1,11 @@
 import { Server } from "socket.io";
 import Chat from "../models/chat";
 import Message from "../models/message";
+import { devLog } from "./helpers";
 
 export default function connectSocket(app: any) {
     const io = new Server(app, { cors: { origin: "*" } });
-    console.log("Socket.io server started");
+    devLog("Socket.io server started");
 
     io.on("connection", socket => {
         socket.on("joinChat", chatId => socket.join(chatId));
@@ -19,7 +20,7 @@ export default function connectSocket(app: any) {
                 await chat.save();
                 io.to(chatId).emit('receiveMessage', await newMessage.populate('sender'));
             } catch (error) {
-                console.log(error);
+                devLog(error);
             }
         })
     });

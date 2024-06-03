@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from "express";
-import { errorHandler } from "../utils/helpers";
+import { errorHandler, getChatName } from "../utils/helpers";
 import Chat from "../models/chat";
 import Message from "../models/message";
 
@@ -69,25 +69,16 @@ export async function getUserChats(req: Request, res: Response) {
             .sort({ updatedAt: -1 });
 
         const formattedChats = chats.map(chat => {
-            if (chat.members.length === 1) {
-                return {
-                    id: chat.id,
-                    chatName: `${chat.members[0].displayName} (You)`
-                };
-            } else if (chat.members.length === 2) {
-                return {
-                    id: chat.id,
-                    chatName: chat.members.find(i => i.id !== userId)?.displayName
-                };
+            const result = { id: chat.id, chatName: "" };
+            if (chat.members.length > 2) {
+                result.chatName = "GroupName";
+            } else if (chat.members.length > 1) {
+                result.chatName = chat.members.find(i => i.id !== userId)?.displayName as string;
             } else {
-                return {
-                    id: chat.id,
-                    chatName: "GroupName"
-                };
+                result.chatName = `${chat.members[0].displayName} (You)`;
             }
-            return chat
+            return result;
         });
-
         return res.json(formattedChats);
 
     } catch (error) {
@@ -110,7 +101,10 @@ export async function getChatMessages(req: Request, res: Response) {
             });
         if (!chat) return res.status(404).json("Chat not found");
 
-        return res.json(chat.messages);
+
+        return res.json({
+            chatName: await getChatName(chat, userId),
+            messages: chat.messages });
     } catch (error) {
         return errorHandler(res, error);
     }

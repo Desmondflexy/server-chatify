@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { IChat } from "../types";
 
 /** Returns internal server error message with status code 500 */
 export function errorHandler(res: Response, error: any) {
@@ -16,4 +17,12 @@ export function devLog(message: unknown) {
 
 export function generateChatifyId() {
 
+}
+
+/** Returns the chat name based on the number of members */
+export async function getChatName(chat: IChat, userId: string) {
+    chat = await chat.populate('members');
+    if (chat.members.length > 2) return "GroupName";
+    if (chat.members.length > 1) return chat.members.find(i => i.id !== userId)?.displayName as string;
+    return  `${chat.members[0].displayName} (You)`;
 }

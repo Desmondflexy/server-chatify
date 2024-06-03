@@ -9,6 +9,7 @@ import authRouter from './routes/auth';
 import chatsRouter from './routes/chat';
 import connectDB from './config/database';
 import connectSocket from "./utils/socket";
+import { devLog } from "./utils/helpers";
 
 dotenv.config();
 connectDB();
@@ -33,7 +34,7 @@ app.use("/*", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 const expressServer = app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+    devLog(`Server is running on port http://localhost:${PORT}`);
 });
 
 connectSocket(expressServer);
