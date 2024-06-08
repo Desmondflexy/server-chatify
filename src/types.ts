@@ -18,4 +18,6 @@ export interface IUser extends Document {
 export interface IChat extends Document {
     messages: IMessage[];
     members: IUser[];
+    createdAt: Date;
+    updatedAt: Date;
 }
