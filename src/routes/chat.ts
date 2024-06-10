@@ -5,7 +5,5 @@ import authenticate from '../middleware/authentication';
 const router = express.Router();
 
 router.post('/friend/:friendId', authenticate, chat.checkIfChatExists, chat.startChat);
-router.get('/', authenticate, chat.getUserChats);
-router.get('/:chatId', authenticate, chat.getChatMessages);
 
 export default router;

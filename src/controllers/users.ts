@@ -34,3 +34,14 @@ export async function getUserByEmail(req: Request, res: Response) {
         errorHandler(res, error);
     }
 }
+
+export async function getUserById(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id).select('email displayName phone picture');
+        if (!user) return res.status(404).json("User not found");
+        return res.json(user);
+    } catch (error) {
+        errorHandler(res, error);
+    }
+}

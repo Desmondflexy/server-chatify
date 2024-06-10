@@ -16,7 +16,7 @@ export default function connectSocket(app: any) {
                     .sort({ updatedAt: -1 })
                     .populate('messages members');
 
-                function truncateMessage(text:string, n:number) {
+                function truncateMessage(text: string, n: number) {
                     return text.length > n ? text.substring(0, n - 1) + '...' : text;
                 }
 
@@ -44,8 +44,10 @@ export default function connectSocket(app: any) {
                 socket.emit("receivedChats", formattedChats);
             } catch (error) {
                 devLog(error);
+                socket.emit('error', { error: 'Internal server error. Please try again later.' });
             }
         });
+
         socket.on("fetchChatMessages", async function (data: { chatId: string, userId: string }) {
             try {
                 const { chatId, userId } = data;
@@ -64,12 +66,14 @@ export default function connectSocket(app: any) {
                     messages: chat.messages
                 });
 
-
             } catch (error) {
                 devLog(error);
+                socket.emit('error', { error: 'Internal server error. Please try again later.' });
             }
         });
+
         socket.on("joinChat", chatId => socket.join(chatId));
+
         socket.on("sendMessage", async data => {
             const { chatId, userId, text } = data;
             try {
@@ -82,7 +86,10 @@ export default function connectSocket(app: any) {
                 io.to(chatId).emit('receiveMessage', await newMessage.populate('sender'));
             } catch (error) {
                 devLog(error);
+                socket.emit('error', { error: 'Internal server error. Please try again later.' });
             }
         });
+
+        socket.on("error", error => devLog(error));
     });
 }
