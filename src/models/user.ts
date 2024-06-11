@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     picture: {
         type: String,
+        default: ""
     },
     phone: {
         type: String,

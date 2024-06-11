@@ -38,3 +38,9 @@ export const startChat = joi.object().keys({
     message: joi.string().required,
     email: joi.string().required,
 });
+
+export const updateProfile = joi.object().keys({
+    displayName: joi.string(),
+    phone: joi.string(),
+    picture: joi.string(),
+});
