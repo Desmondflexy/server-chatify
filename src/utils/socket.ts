@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
-import Chat from "../models/chat";
-import Message from "../models/message";
+import Chat from "../models/Chat";
+import Message from "../models/Message";
 import { devLog, getChatName } from "./helpers";
 
 export default function connectSocket(app: any) {

@@ -1,7 +1,16 @@
-import mongoose from "mongoose";
-import { IUser } from "../types";
+import { Document, model, Schema } from "mongoose";
+export interface IUser extends Document {
+    email: string;
+    password?: string;
+    displayName: string;
+    picture: string;
+    phone: string;
+    ssoId: string;
+    ssoProvider: string;
+    cPin: string;
+}
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new Schema<IUser>({
     email: {
         type: String,
         required: true,
@@ -28,10 +37,14 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     ssoProvider: {
         type: String,
+    },
+    cPin: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true,
 });
 
-export default mongoose.model<IUser>('User', userSchema);
+export default model<IUser>('User', userSchema);
 

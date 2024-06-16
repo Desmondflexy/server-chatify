@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import User from "../models/user";
+import User from "../models/User";
 import * as joi from "../utils/joi-validators";
-import { errorHandler } from "../utils/helpers";
+import { errorHandler, generateChatifyId } from "../utils/helpers";
 import { attachToken, generateToken } from "../utils/jwt";
 import bcrypt from "bcryptjs";
 
@@ -10,11 +10,9 @@ export async function signup(req: Request, res: Response) {
         const { value, error } = joi.signup.validate(req.body);
         if (error) return res.status(400).json(error.message);
         let user = await User.findOne({ email: value.email });
-        if (user) return res.status(409).json({
-            message: "Email has been used",
-        });
+        if (user) return res.status(409).json({ error: "Email has been used" });
 
-        user = await User.create({ ...value, password: await bcrypt.hash(value.password, 10) });
+        user = await User.create({ ...value, password: await bcrypt.hash(value.password, 10), cPin: await generateChatifyId() });
         res.status(201).json({
             message: `User ${user.displayName} created successfully!`,
             userId: user.id
@@ -27,24 +25,17 @@ export async function signup(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
     try {
         const { value, error } = joi.login.validate(req.body);
-        if (error) return res.status(400).json(error.message);
+        if (error) return res.status(400).json({ error: error.message });
 
         let user = await User.findOne({ email: value.email });
-        if (!user) return res.status(401).json({
-            message: "Invalid credentials!",
-        });
+        if (!user) return res.status(401).json({ error: "Invalid credentials!" });
 
         const isValid = await bcrypt.compare(value.password, user.password as string);
-        if (!isValid) return res.status(401).json({
-            message: "Invalid credentials!",
-        });
+        if (!isValid) return res.status(401).json({ error: "Invalid credentials!" });
 
         const token = generateToken(user);
         attachToken(token, res);
-        res.json({
-            message: "Login successful",
-            token,
-        });
+        res.json({ message: "Login successful", token });
     } catch (error) {
         errorHandler(res, error);
     }
@@ -54,7 +45,7 @@ export async function login(req: Request, res: Response) {
 export async function googleSignOn(req: Request, res: Response) {
     try {
         const { value, error } = joi.googleSignOn.validate(req.body);
-        if (error) return res.status(400).json(error.message);
+        if (error) return res.status(400).json({ error: error.message });
 
         let user = await User.findOne({ email: value.email });
 
@@ -64,6 +55,7 @@ export async function googleSignOn(req: Request, res: Response) {
                 displayName: value.name,
                 ssoId: value.id,
                 ssoProvider: "Google",
+                cPin: await generateChatifyId()
             });
         } else if (!user.ssoProvider) {
             // user exists but has not signed in with Google before
@@ -74,10 +66,7 @@ export async function googleSignOn(req: Request, res: Response) {
 
         const token = generateToken(user);
         attachToken(token, res);
-        res.json({
-            message: "Login successful",
-            token,
-        });
+        res.json({ message: "Login successful", token });
     } catch (error) {
         errorHandler(res, error);
     }

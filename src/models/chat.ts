@@ -1,14 +1,22 @@
-import mongoose from "mongoose";
-import { IChat } from "../types";
+import {Document, Schema, model} from "mongoose";
+import { IMessage } from "./Message";
+import { IUser } from "./User";
 
-const chatSchema = new mongoose.Schema<IChat>({
+export interface IChat extends Document {
+    messages: IMessage[];
+    members: IUser[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const chatSchema = new Schema<IChat>({
     messages: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: "Message",
     }],
     members: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: "User",
     }],
@@ -16,4 +24,4 @@ const chatSchema = new mongoose.Schema<IChat>({
     timestamps: true,
 });
 
-export default mongoose.model<IChat>("Chat", chatSchema);
+export default model<IChat>("Chat", chatSchema);

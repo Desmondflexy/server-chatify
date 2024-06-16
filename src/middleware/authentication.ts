@@ -12,14 +12,14 @@ export interface IPayload {
 
 export default function authenticate(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(" ")[1] || req.cookies.token;
-    if (!token) return res.status(401).json("Please login");
+    if (!token) return res.status(401).json({ error: "Please login" });
     try {
         const decodedPayload = verifyToken(token);
         req.user = decodedPayload as IPayload;
         next();
     } catch (error: any) {
         devLog(error.message);
-        return res.status(401).json("Please login");
+        return res.status(401).json({ error: "Please login" });
     }
 }
 
