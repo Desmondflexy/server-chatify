@@ -55,7 +55,6 @@ export async function updateUser(req: Request, res: Response) {
         if (req.file) {
             if (req.file.size > 3 * 1000 * 1000) {
                 return res.status(400).json({
-                    message: "Bad request",
                     error: "Picture size should not exceed 3 MB",
                 });
             }

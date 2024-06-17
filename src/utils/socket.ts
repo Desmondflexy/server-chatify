@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import Chat from "../models/Chat";
+import Chat from "../models/chat";
 import Message from "../models/Message";
 import { devLog, getChatName } from "./helpers";
 

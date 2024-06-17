@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { configCloudinary } from "../config/cloudinary";
-import { IChat } from "../models/Chat";
+import { IChat } from "../models/chat";
 import User from "../models/User";
 
 /** Returns internal server error message with status code 500 */
