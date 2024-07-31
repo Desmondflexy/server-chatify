@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import { errorHandler } from "../utils/helpers";
-import Chat from "../models/chat";
+import Chat from "../models/Chat";
 import Message from "../models/Message";
 import User, { IUser } from "../models/User";
 

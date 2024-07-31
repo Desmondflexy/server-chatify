@@ -101,6 +101,18 @@ export async function deleteUserById(req: Request, res: Response) {
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ error: "user not found" });
         user.deleteOne();
+        res.json("user deleted successfully");
+    } catch (error) {
+        errorHandler(res, error);
+    }
+}
+
+export async function profile(req: Request, res: Response) {
+    const userId = req.user.id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "user not found" });
+        res.json(user);
     } catch (error) {
         errorHandler(res, error);
     }

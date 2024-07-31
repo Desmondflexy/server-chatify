@@ -27,7 +27,7 @@ export async function login(req: Request, res: Response) {
         const { value, error } = joi.login.validate(req.body);
         if (error) return res.status(400).json({ error: error.message });
 
-        let user = await User.findOne({ email: value.email });
+        const user = await User.findOne({ email: value.email });
         if (!user) return res.status(401).json({ error: "Invalid credentials!" });
 
         const isValid = await bcrypt.compare(value.password, user.password as string);

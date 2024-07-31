@@ -1,6 +1,5 @@
 node_modules
 dist
 .env
-*todo*
 .DS_Store
-myscripts
+developer

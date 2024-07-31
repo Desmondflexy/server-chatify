@@ -1,4 +1,4 @@
-import {Document, Schema, model} from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { IMessage } from "./Message";
 import { IUser } from "./User";
 

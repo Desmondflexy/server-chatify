@@ -8,8 +8,9 @@ const router = express.Router();
 router.get("/me", authenticate, users.me);
 router.get("/all", users.allUsers);
 router.get("/", authenticate, users.getUserByCPin);
-router.get("/:id", authenticate, users.getUserById);
 router.put("/me", authenticate, upload.single("picture"), users.updateUser);
+router.get("/me/profile", authenticate, users.profile);
 router.delete("/me/picture", authenticate, users.deleteProfilePicture);
+router.get("/:id", authenticate, users.getUserById);
 
 export default router;

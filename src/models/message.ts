@@ -1,4 +1,4 @@
-import {model, Schema, Document} from "mongoose";
+import { model, Schema, Document } from "mongoose";
 import { IUser } from "./User";
 
 export interface IMessage extends Document {
