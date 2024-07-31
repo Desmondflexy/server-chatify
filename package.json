@@ -28,7 +28,7 @@
         "socket.io": "^4.7.5"
     },
     "scripts": {
-        "start": "node .",
+        "start": "node dist/app.js",
         "dev": "node --watch .",
         "build": "tsc",
         "compile": "tsc --watch"
